@@ -2,10 +2,21 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ProLogix - Logistics Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        /* Custom scrollbar for chat messages */
+        #chatMessages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chatMessages::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 128, 0, 0.4);
+            border-radius: 3px;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800">
@@ -27,7 +38,7 @@
         <p class="text-lg mb-8">Fast, reliable, and secure logistics tracking</p>
         <div class="flex justify-center">
             <input type="text" id="trackingNumber" placeholder="Enter Tracking Number"
-                class="border px-4 py-2 rounded-l-md w-80">
+                class="border px-4 py-2 rounded-l-md w-80" />
             <button id="trackBtn"
                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-md font-semibold">Track</button>
         </div>
@@ -45,92 +56,248 @@
     <section id="contact" class="py-20 px-6 bg-white text-center">
         <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
         <p class="mb-6">Have questions or need help? Reach out to our support team.</p>
-        <form class="max-w-xl mx-auto space-y-4">
-            <input type="text" placeholder="Your Name" class="w-full border px-4 py-2 rounded">
-            <input type="email" placeholder="Your Email" class="w-full border px-4 py-2 rounded">
-            <textarea placeholder="Your Message" rows="4" class="w-full border px-4 py-2 rounded"></textarea>
-            <button type="submit"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold">Send Message</button>
+        <form
+            class="max-w-xl mx-auto space-y-4"
+            onsubmit="event.preventDefault(); alert('Thank you for contacting us! We will get back to you soon.'); this.reset();"
+        >
+            <input type="text" placeholder="Your Name" class="w-full border px-4 py-2 rounded" required />
+            <input type="email" placeholder="Your Email" class="w-full border px-4 py-2 rounded" required />
+            <textarea placeholder="Your Message" rows="4" class="w-full border px-4 py-2 rounded" required></textarea>
+            <button
+                type="submit"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold"
+            >
+                Send Message
+            </button>
         </form>
     </section>
 
-    <!-- Chat Widget -->
-    <div id="chatWidget" class="fixed bottom-4 right-4 z-50">
-        <button id="openChatBtn"
-            class="bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:scale-105 transition-transform">
-            💬 Chat With Us
+    <!-- New Chat Widget -->
+    <div id="chatWidget" class="fixed bottom-4 right-4 z-50 w-80 font-sans">
+        <button
+            id="openChatBtn"
+            class="bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:scale-105 transition-transform w-full"
+        >
+            💬 Chat with ProLogix AI
         </button>
 
-        <div id="chatBox" class="hidden mt-4 bg-white border border-gray-300 rounded-xl shadow-xl w-80 p-4">
-            <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold text-gray-700">ProLogix Support</span>
-                <button id="closeChatBtn" class="text-gray-500 hover:text-red-500 text-xl leading-none">&times;</button>
-            </div>
-            <div id="chatMessages" class="h-48 overflow-y-auto text-sm text-gray-700 mb-3 border-t pt-2 flex flex-col space-y-2"></div>
-            <div class="flex items-center space-x-2">
-                <input type="text" id="chatInput" placeholder="Type a message..."
-                    class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-green-500 focus:outline-none">
-                <button id="sendChatBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">Send</button>
-            </div>
+        <div
+            id="chatBox"
+            class="hidden mt-3 bg-white border border-gray-300 rounded-xl shadow-lg flex flex-col h-96"
+            aria-live="polite"
+            aria-atomic="true"
+        >
+            <header
+                class="flex justify-between items-center bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-t-xl px-4 py-2"
+            >
+                <h3 class="font-semibold">ProLogix AI Support</h3>
+                <button id="closeChatBtn" class="text-xl font-bold hover:text-red-400" aria-label="Close chat">&times;</button>
+            </header>
+
+            <div
+                id="chatMessages"
+                class="flex-1 p-3 overflow-y-auto space-y-2 bg-gray-50"
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+            ></div>
+
+            <form id="chatForm" class="flex border-t border-gray-300 p-3" autocomplete="off">
+                <input
+                    id="chatInput"
+                    type="text"
+                    placeholder="Ask me anything about your package..."
+                    class="flex-grow border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                    aria-label="Type your message"
+                />
+                <button
+                    type="submit"
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-lg font-semibold transition-colors"
+                >
+                    Send
+                </button>
+            </form>
         </div>
     </div>
 
     <!-- Scripts -->
     <script>
+        // Track Button Logic
         const trackingButton = document.getElementById("trackBtn");
         const resultDiv = document.getElementById("result");
 
         trackingButton.addEventListener("click", () => {
-            const trackingNumber = document.getElementById("trackingNumber").value;
-            resultDiv.innerText = trackingNumber ? `Tracking info for ${trackingNumber}: Package is in transit.` : "Please enter a tracking number.";
-        });
-
-        const openChatBtn = document.getElementById("openChatBtn");
-        const closeChatBtn = document.getElementById("closeChatBtn");
-        const chatBox = document.getElementById("chatBox");
-        const chatMessages = document.getElementById("chatMessages");
-        const chatInput = document.getElementById("chatInput");
-        const sendChatBtn = document.getElementById("sendChatBtn");
-
-        openChatBtn.addEventListener('click', () => chatBox.classList.toggle('hidden'));
-        closeChatBtn.addEventListener('click', () => chatBox.classList.add('hidden'));
-
-        sendChatBtn.addEventListener('click', sendUserMessage);
-        chatInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendUserMessage();
-        });
-
-        async function sendUserMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-
-            appendMessage('You', message);
-            chatInput.value = '';
-            appendMessage('Bot', 'Typing...');
-
-            try {
-                const response = await fetch('http://localhost:3000/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message })
-                });
-                const data = await response.json();
-
-                chatMessages.removeChild(chatMessages.lastChild);
-                appendMessage('Bot', data.reply);
-            } catch (err) {
-                chatMessages.removeChild(chatMessages.lastChild);
-                appendMessage('Bot', 'Oops! Something went wrong.');
+            const trackingNumber = document.getElementById("trackingNumber").value.trim();
+            if (!trackingNumber) {
+                resultDiv.innerText = "Please enter a tracking number.";
+                return;
             }
-        }
+            // Simulate real tracking info
+            const statuses = [
+                "Package is in transit and expected to arrive tomorrow.",
+                "Package has been dispatched from the warehouse.",
+                "Package is out for delivery.",
+                "Package delivered successfully. Thank you for choosing ProLogix!",
+                "Package delayed due to weather conditions. We apologize for the inconvenience.",
+            ];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            resultDiv.innerText = `Tracking info for ${trackingNumber}: ${randomStatus}`;
+        });
 
-        function appendMessage(sender, text) {
-            const msg = document.createElement('div');
-            msg.classList.add('p-2', 'rounded', 'shadow', 'text-sm', sender === 'You' ? 'bg-green-100 self-end text-right' : 'bg-white self-start');
-            msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-            chatMessages.appendChild(msg);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        // Chat Widget Logic
+        document.addEventListener("DOMContentLoaded", () => {
+            const openChatBtn = document.getElementById("openChatBtn");
+            const closeChatBtn = document.getElementById("closeChatBtn");
+            const chatBox = document.getElementById("chatBox");
+            const chatMessages = document.getElementById("chatMessages");
+            const chatForm = document.getElementById("chatForm");
+            const chatInput = document.getElementById("chatInput");
+
+            // Show/hide chat box
+            openChatBtn.addEventListener("click", () => {
+                chatBox.classList.toggle("hidden");
+                openChatBtn.classList.toggle("hidden");
+                if (!chatBox.classList.contains("hidden")) {
+                    chatInput.focus();
+                }
+            });
+
+            closeChatBtn.addEventListener("click", () => {
+                chatBox.classList.add("hidden");
+                openChatBtn.classList.remove("hidden");
+            });
+
+            // Helper: Add message bubble
+            function addMessage(sender, text, isHTML = false) {
+                const message = document.createElement("div");
+                message.classList.add("max-w-[80%]", "px-3", "py-2", "rounded-lg", "shadow-sm", "whitespace-pre-wrap");
+                message.style.opacity = "0";
+                message.style.transform = "translateY(10px)";
+                message.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+
+                if (sender === "user") {
+                    message.classList.add("bg-green-200", "self-end", "text-right", "text-gray-900");
+                } else {
+                    message.classList.add("bg-white", "self-start", "text-gray-800", "border", "border-gray-300");
+                }
+
+                if (isHTML) {
+                    message.innerHTML = text;
+                } else {
+                    message.textContent = text;
+                }
+
+                chatMessages.appendChild(message);
+
+                // Animate appearance
+                requestAnimationFrame(() => {
+                    message.style.opacity = "1";
+                    message.style.transform = "translateY(0)";
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+            }
+
+            // Typing indicator with animated dots
+            let typingInterval;
+            function showTyping() {
+                const typingMsg = document.createElement("div");
+                typingMsg.classList.add(
+                    "bg-white",
+                    "self-start",
+                    "text-gray-500",
+                    "italic",
+                    "rounded-lg",
+                    "px-3",
+                    "py-2",
+                    "border",
+                    "border-gray-300"
+                );
+                typingMsg.id = "typingIndicator";
+                let dots = "";
+                typingMsg.textContent = "ProLogix AI is typing";
+
+                chatMessages.appendChild(typingMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                typingInterval = setInterval(() => {
+                    dots = dots.length < 3 ? dots + "." : "";
+                    typingMsg.textContent = "ProLogix AI is typing" + dots;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 500);
+            }
+
+            function removeTyping() {
+                clearInterval(typingInterval);
+                const typingMsg = document.getElementById("typingIndicator");
+                if (typingMsg) typingMsg.remove();
+            }
+
+            // Simple AI response simulation (can be replaced by real API call)
+            function getAIResponse(message) {
+                message = message.toLowerCase();
+
+                // Greetings
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening)/.test(message)) {
+                    return "Hello! 👋 How can I help you track your package or solve any logistics questions today?";
+                }
+
+                // Ask for tracking number
+                if (/track|package|logistics|parcel|shipment|status/.test(message)) {
+                    return "Please share your tracking number so I can provide the latest status.";
+                }
+
+                // Detect tracking number (simple pattern)
+                const trackingIdMatch = message.match(/\b[a-z0-9]{6,}\b/i);
+                if (trackingIdMatch) {
+                    const trackingId = trackingIdMatch[0].toUpperCase();
+                    const statuses = [
+                        `Your package ${trackingId} is currently at the sorting facility.`,
+                        `Package ${trackingId} is in transit and expected to arrive within 2 days.`,
+                        `Good news! Package ${trackingId} is out for delivery today.`,
+                        `Package ${trackingId} was delivered successfully. Hope you enjoy your order!`,
+                        `Package ${trackingId} is delayed due to unforeseen circumstances. We apologize.`,
+                    ];
+                    return statuses[Math.floor(Math.random() * statuses.length)];
+                }
+
+                // Support inquiries
+                if (/help|support|problem|issue/.test(message)) {
+                    return "I'm here to help! Could you please provide details or your tracking number?";
+                }
+
+                // Farewell
+                if (/bye|goodbye|thanks|thank you/.test(message)) {
+                    return "You're welcome! Feel free to chat anytime. Have a great day! 😊";
+                }
+
+                return "I'm here to assist with your package tracking or logistics questions. Please provide a tracking number or ask me anything!";
+            }
+
+            // Handle form submit (send message)
+            chatForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const userMsg = chatInput.value.trim();
+                if (!userMsg) return;
+
+                addMessage("user", userMsg);
+                chatInput.value = "";
+                chatInput.disabled = true;
+
+                showTyping();
+
+                // Simulate AI typing delay
+                await new Promise((r) => setTimeout(r, 1500));
+
+                removeTyping();
+
+                const aiReply = getAIResponse(userMsg);
+                addMessage("bot", aiReply);
+
+                chatInput.disabled = false;
+                chatInput.focus();
+            });
+        });
     </script>
 </body>
 
