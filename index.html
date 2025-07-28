@@ -1,340 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logistics Tracker</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles to ensure rounded corners are applied consistently */
-        body {
-            font-family: "Inter", sans-serif;
-            background-color: #f0f4f8; /* Light blue-gray background */
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
-            transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1), transform 0.2s cubic-bezier(.4,0,.2,1);
-        }
-        .card:hover {
-            box-shadow: 0 8px 24px 0 rgba(60,72,88,0.15);
-            transform: translateY(-2px) scale(1.01);
-        }
-        .btn-primary {
-            background-image: linear-gradient(to right, #2563eb, #4caf50); /* Blue to green gradient */
-            color: white;
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 0.75rem 1.5rem; /* py-3 px-6 */
-            font-weight: 600; /* font-semibold */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            letter-spacing: 0.5px;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .btn-secondary {
-            background-color: #64748b; /* Slate-500 */
-            color: white;
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 0.5rem 1rem; /* py-2 px-4 */
-            font-weight: 500; /* font-medium */
-            transition: background-color 0.2s ease;
-        }
-        .btn-secondary:hover {
-            background-color: #334155; /* Slate-700 */
-        }
-        .input-field {
-            border-radius: 0.5rem; /* rounded-lg */
-            border: 1px solid #d1d5db; /* border-gray-300 */
-            padding: 0.75rem 1rem; /* py-3 px-4 */
-            background-color: #f8fafc;
-        }
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-        }
-        .status-pickup {
-            background-color: #facc15; /* yellow-400 */
-            color: #78350f; /* yellow-900 */
-        }
-        .status-in-transit {
-            background-color: #3b82f6; /* blue-500 */
-            color: #eff6ff; /* blue-50 */
-        }
-        .status-delivered {
-            background-color: #22c55e; /* green-500 */
-            color: #eff6ff; /* green-50 */
-        }
-        .status-unknown {
-            background-color: #6b7280; /* gray-500 */
-            color: #f9fafb; /* gray-50 */
-        }
-    </style>
+    <title>ProLogix - Logistics Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-green-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
-    <div class="container mx-auto max-w-4xl bg-white p-8 rounded-2xl shadow-xl space-y-8">
-        <!-- Header Section -->
-        <header class="text-center mb-8 flex flex-col items-center">
-            <div class="flex items-center justify-center mb-3">
-                <img src="https://img.icons8.com/ios-filled/100/4caf50/delivery.png" alt="Logistics Icon" class="h-16 w-16 mr-2" style="border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-                <span class="text-2xl font-bold text-gray-700 tracking-wide">ProLogix</span>
-            </div>
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Logistics Tracker</h1>
-            <p class="text-lg text-gray-500">Monitor your shipments and warehouse pickups in real-time with confidence.</p>
-        </header>
 
-        <!-- Tracking Input Section -->
-        <section class="card p-6 flex flex-col md:flex-row items-center gap-4">
-            <input type="text" id="trackingNumberInput" placeholder="Enter Tracking Number"
-                   class="input-field flex-grow w-full md:w-auto text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300">
-            <button id="trackButton" class="btn-primary w-full md:w-auto flex-shrink-0">
-                Track Package
-            </button>
-        </section>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-500 to-green-500 p-4 text-white shadow">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">ProLogix</h1>
+            <ul class="flex space-x-6 font-semibold">
+                <li><a href="#home" class="hover:text-yellow-300">Home</a></li>
+                <li><a href="#about" class="hover:text-yellow-300">About</a></li>
+                <li><a href="#contact" class="hover:text-yellow-300">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <!-- Tracking Results Section -->
-        <section id="trackingResults" class="card p-6 hidden">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Shipment Details</h2>
-            <div class="space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <p class="text-gray-700 font-medium">Tracking Number: <span id="displayTrackingNumber" class="text-gray-900 font-semibold"></span></p>
-                    <span id="packageStatusBadge" class="status-badge mt-2 sm:mt-0"></span>
-                </div>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <p class="text-gray-700 font-medium">Current Location: <span id="currentLocation" class="text-gray-900"></span></p>
-                    <p class="text-gray-700 font-medium mt-2">Estimated Delivery/Pickup: <span id="estimatedTime" class="text-gray-900"></span></p>
-                </div>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Activity History</h3>
-                    <ul id="activityHistory" class="list-disc list-inside text-gray-700 space-y-1">
-                        <!-- History items will be dynamically added here -->
-                    </ul>
-                </div>
-            </div>
-        </section>
+    <!-- Hero Section -->
+    <section id="home" class="text-center py-20 bg-white shadow-inner">
+        <h2 class="text-4xl font-bold mb-4">Track Your Package</h2>
+        <p class="text-lg mb-8">Fast, reliable, and secure logistics tracking</p>
+        <div class="flex justify-center">
+            <input type="text" id="trackingNumber" placeholder="Enter Tracking Number"
+                class="border px-4 py-2 rounded-l-md w-80">
+            <button id="trackBtn"
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-md font-semibold">Track</button>
+        </div>
+        <div id="result" class="mt-6 text-lg font-medium"></div>
+    </section>
 
-        <!-- Previously Tracked Packages Section -->
-        <section class="card p-6" id="previouslyTrackedSection">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tracked Packages</h2>
-            <div id="trackedPackagesList" class="space-y-4">
-                <p class="text-gray-500" id="noTrackedPackagesMessage">No packages tracked yet.</p>
-                <!-- Previously tracked items will be dynamically added here -->
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6 bg-gray-100 text-center">
+        <h2 class="text-3xl font-bold mb-4">About ProLogix</h2>
+        <p class="max-w-3xl mx-auto">ProLogix is your trusted partner for logistics solutions. We provide real-time
+            tracking, efficient delivery, and seamless support to ensure your packages reach safely and on time.</p>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6 bg-white text-center">
+        <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
+        <p class="mb-6">Have questions or need help? Reach out to our support team.</p>
+        <form class="max-w-xl mx-auto space-y-4">
+            <input type="text" placeholder="Your Name" class="w-full border px-4 py-2 rounded">
+            <input type="email" placeholder="Your Email" class="w-full border px-4 py-2 rounded">
+            <textarea placeholder="Your Message" rows="4" class="w-full border px-4 py-2 rounded"></textarea>
+            <button type="submit"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Chat Widget -->
+    <div id="chatWidget" class="fixed bottom-4 right-4 z-50">
+        <button id="openChatBtn"
+            class="bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:scale-105 transition-transform">
+            💬 Chat With Us
+        </button>
+
+        <div id="chatBox" class="hidden mt-4 bg-white border border-gray-300 rounded-xl shadow-xl w-80 p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-semibold text-gray-700">ProLogix Support</span>
+                <button id="closeChatBtn" class="text-gray-500 hover:text-red-500 text-xl leading-none">&times;</button>
             </div>
-        </section>
+            <div id="chatMessages" class="h-48 overflow-y-auto text-sm text-gray-700 mb-3 border-t pt-2 flex flex-col space-y-2"></div>
+            <div class="flex items-center space-x-2">
+                <input type="text" id="chatInput" placeholder="Type a message..."
+                    class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-green-500 focus:outline-none">
+                <button id="sendChatBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">Send</button>
+            </div>
+        </div>
     </div>
-    <!-- Footer -->
-    <footer class="mt-8 text-center text-gray-400 text-sm">
-        &copy; 2025 ProLogix Logistics. All rights reserved. | <a href="mailto:support@prologix.com" class="underline hover:text-green-600">Contact Support</a>
-    </footer>
 
+    <!-- Scripts -->
     <script>
-        // Global variables for DOM elements
-        const trackingNumberInput = document.getElementById('trackingNumberInput');
-        const trackButton = document.getElementById('trackButton');
-        const trackingResultsSection = document.getElementById('trackingResults');
-        const displayTrackingNumber = document.getElementById('displayTrackingNumber');
-        const packageStatusBadge = document.getElementById('packageStatusBadge');
-        const currentLocation = document.getElementById('currentLocation');
-        const estimatedTime = document.getElementById('estimatedTime');
-        const activityHistoryList = document.getElementById('activityHistory');
-        const trackedPackagesList = document.getElementById('trackedPackagesList');
-        const noTrackedPackagesMessage = document.getElementById('noTrackedPackagesMessage');
+        const trackingButton = document.getElementById("trackBtn");
+        const resultDiv = document.getElementById("result");
 
-        // Function to simulate package data based on tracking number
-        function getSimulatedPackageData(trackingNumber) {
-            // This is a simulation. In a real app, this would be an API call.
-            // We'll make status change based on last digit for demonstration.
-            let status = 'Unknown';
-            let location = 'Processing Facility';
-            let history = [];
-            let estimated = 'N/A';
-
-            const lastDigit = parseInt(trackingNumber.slice(-1));
-
-            if (isNaN(lastDigit)) {
-                status = 'Invalid Tracking Number';
-                history.push({ time: new Date().toLocaleString(), event: 'Invalid tracking number entered.' });
-            } else if (lastDigit % 3 === 0) {
-                status = 'Delivered';
-                location = 'Customer Address';
-                estimated = 'Delivered on ' + new Date().toLocaleDateString();
-                history.push(
-                    { time: '2025-06-23 10:00 AM', event: 'Package picked up from warehouse.' },
-                    { time: '2025-06-24 08:00 AM', event: 'Out for delivery.' },
-                    { time: new Date().toLocaleString(), event: 'Delivered to recipient.' }
-                );
-            } else if (lastDigit % 3 === 1) {
-                status = 'In Transit';
-                location = 'Distribution Center ' + (lastDigit % 5);
-                estimated = 'Expected by ' + new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(); // 2 days from now
-                history.push(
-                    { time: '2025-06-23 11:30 AM', event: 'Package picked up from warehouse.' },
-                    { time: new Date().toLocaleString(), event: 'Departed from Distribution Center ' + (lastDigit % 5) + '.' }
-                );
-            } else { // lastDigit % 3 === 2
-                status = 'Pickup Ready';
-                location = 'Warehouse A, Bay ' + (lastDigit % 10);
-                estimated = 'Ready for pickup now.';
-                history.push(
-                    { time: new Date().toLocaleString(), event: 'Package arrived at warehouse and is ready for pickup.' }
-                );
-            }
-
-            return {
-                trackingNumber,
-                status,
-                location,
-                estimated,
-                history
-            };
-        }
-
-        // Function to display tracking results
-        function displayTrackingResults(packageData) {
-            trackingResultsSection.classList.remove('hidden');
-            displayTrackingNumber.textContent = packageData.trackingNumber;
-            currentLocation.textContent = packageData.location;
-            estimatedTime.textContent = packageData.estimated;
-
-            // Update status badge
-            packageStatusBadge.textContent = packageData.status;
-            packageStatusBadge.className = 'status-badge mt-2 sm:mt-0'; // Reset classes
-            if (packageData.status === 'Pickup Ready') {
-                packageStatusBadge.classList.add('status-pickup');
-            } else if (packageData.status === 'In Transit') {
-                packageStatusBadge.classList.add('status-in-transit');
-            } else if (packageData.status === 'Delivered') {
-                packageStatusBadge.classList.add('status-delivered');
-            } else {
-                packageStatusBadge.classList.add('status-unknown');
-            }
-
-            // Clear previous history
-            activityHistoryList.innerHTML = '';
-            // Populate activity history
-            packageData.history.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = `${item.time}: ${item.event}`;
-                activityHistoryList.appendChild(li);
-            });
-        }
-
-        // Function to save tracked package to localStorage
-        function saveTrackedPackage(packageData) {
-            let trackedPackages = JSON.parse(localStorage.getItem('trackedPackages')) || [];
-            // Remove existing entry if tracking number is already present
-            trackedPackages = trackedPackages.filter(p => p.trackingNumber !== packageData.trackingNumber);
-            // Add new/updated package at the beginning
-            trackedPackages.unshift(packageData);
-            // Limit to last 5-10 tracked packages to prevent localStorage bloat
-            if (trackedPackages.length > 10) {
-                trackedPackages = trackedPackages.slice(0, 10);
-            }
-            localStorage.setItem('trackedPackages', JSON.stringify(trackedPackages));
-            renderTrackedPackages(); // Re-render the list
-        }
-
-        // Function to load and render previously tracked packages
-        function renderTrackedPackages() {
-            const trackedPackages = JSON.parse(localStorage.getItem('trackedPackages')) || [];
-            trackedPackagesList.innerHTML = ''; // Clear previous list
-
-            if (trackedPackages.length === 0) {
-                noTrackedPackagesMessage.classList.remove('hidden');
-            } else {
-                noTrackedPackagesMessage.classList.add('hidden');
-                trackedPackages.forEach(pData => {
-                    const packageCard = document.createElement('div');
-                    packageCard.className = 'flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm';
-                    packageCard.innerHTML = `
-                        <div>
-                            <p class="font-semibold text-gray-800 text-lg">${pData.trackingNumber}</p>
-                            <p class="text-gray-600 text-sm">Status: <span class="font-medium ${
-                                pData.status === 'Pickup Ready' ? 'text-yellow-700' :
-                                pData.status === 'In Transit' ? 'text-blue-700' :
-                                pData.status === 'Delivered' ? 'text-green-700' : 'text-gray-700'
-                            }">${pData.status}</span></p>
-                            <p class="text-gray-600 text-sm">Location: ${pData.location}</p>
-                        </div>
-                        <div class="mt-3 sm:mt-0 flex space-x-2">
-                            <button class="btn-primary py-2 px-4 text-sm track-again-btn" data-tracking-number="${pData.trackingNumber}">
-                                Details
-                            </button>
-                            <button class="btn-secondary py-2 px-4 text-sm delete-btn" data-tracking-number="${pData.trackingNumber}">
-                                Remove
-                            </button>
-                        </div>
-                    `;
-                    trackedPackagesList.appendChild(packageCard);
-                });
-
-                // Add event listeners for "Details" and "Remove" buttons
-                document.querySelectorAll('.track-again-btn').forEach(button => {
-                    button.onclick = (event) => {
-                        const trackingNumber = event.target.dataset.trackingNumber;
-                        handleDetailsClick(trackingNumber);
-                    };
-                });
-
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.onclick = (event) => {
-                        const trackingNumberToDelete = event.target.dataset.trackingNumber;
-                        deleteTrackedPackage(trackingNumberToDelete);
-                    };
-                });
-            }
-        }
-
-        // Function to delete a tracked package from localStorage
-        function deleteTrackedPackage(trackingNumber) {
-            let trackedPackages = JSON.parse(localStorage.getItem('trackedPackages')) || [];
-            trackedPackages = trackedPackages.filter(p => p.trackingNumber !== trackingNumber);
-            localStorage.setItem('trackedPackages', JSON.stringify(trackedPackages));
-            renderTrackedPackages(); // Re-render the list
-            // Optionally hide tracking results if the deleted package was currently displayed
-            if (displayTrackingNumber.textContent === trackingNumber) {
-                trackingResultsSection.classList.add('hidden');
-            }
-        }
-
-        // Function to handle Details button click
-        function handleDetailsClick(trackingNumber) {
-            if (trackingNumber) {
-                trackingNumberInput.value = trackingNumber;
-                const packageData = getSimulatedPackageData(trackingNumber);
-                displayTrackingResults(packageData);
-            }
-        }
-
-        // Main tracking function
-        function trackPackage() {
-            const trackingNumber = trackingNumberInput.value.trim();
-
-            if (trackingNumber) {
-                const packageData = getSimulatedPackageData(trackingNumber);
-                displayTrackingResults(packageData);
-                saveTrackedPackage(packageData); // Save/update in localStorage
-            } else {
-                alert("Please enter a tracking number."); // Using alert for simplicity, replace with custom modal in production
-            }
-        }
-
-        // Event Listeners
-        trackButton.addEventListener('click', trackPackage);
-        trackingNumberInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                trackPackage();
-            }
+        trackingButton.addEventListener("click", () => {
+            const trackingNumber = document.getElementById("trackingNumber").value;
+            resultDiv.innerText = trackingNumber ? `Tracking info for ${trackingNumber}: Package is in transit.` : "Please enter a tracking number.";
         });
 
-        // Initial load: Render previously tracked packages when the page loads
-        document.addEventListener('DOMContentLoaded', renderTrackedPackages);
+        const openChatBtn = document.getElementById("openChatBtn");
+        const closeChatBtn = document.getElementById("closeChatBtn");
+        const chatBox = document.getElementById("chatBox");
+        const chatMessages = document.getElementById("chatMessages");
+        const chatInput = document.getElementById("chatInput");
+        const sendChatBtn = document.getElementById("sendChatBtn");
+
+        openChatBtn.addEventListener('click', () => chatBox.classList.toggle('hidden'));
+        closeChatBtn.addEventListener('click', () => chatBox.classList.add('hidden'));
+
+        sendChatBtn.addEventListener('click', sendUserMessage);
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendUserMessage();
+        });
+
+        async function sendUserMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            appendMessage('You', message);
+            chatInput.value = '';
+            appendMessage('Bot', 'Typing...');
+
+            try {
+                const response = await fetch('http://localhost:3000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+
+                chatMessages.removeChild(chatMessages.lastChild);
+                appendMessage('Bot', data.reply);
+            } catch (err) {
+                chatMessages.removeChild(chatMessages.lastChild);
+                appendMessage('Bot', 'Oops! Something went wrong.');
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const msg = document.createElement('div');
+            msg.classList.add('p-2', 'rounded', 'shadow', 'text-sm', sender === 'You' ? 'bg-green-100 self-end text-right' : 'bg-white self-start');
+            msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     </script>
 </body>
+
 </html>
