@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ProLogix - Logistics Tracker</title>
@@ -20,6 +21,19 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .bg-overlay {
+            background: rgba(255,255,255,0.85);
+            min-height: 100vh;
+        }
+    </style>
+    <div class="bg-overlay">
     <!-- Navigation -->
     <nav class="bg-gradient-to-r from-blue-500 to-green-500 p-4 text-white shadow">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -29,49 +43,159 @@
                 <li><a href="#about" class="hover:text-yellow-300">About</a></li>
                 <li><a href="#contact" class="hover:text-yellow-300">Contact</a></li>
             </ul>
+            <button id="signInBtn" class="ml-6 bg-white text-blue-600 font-bold px-4 py-2 rounded shadow hover:bg-yellow-300 hover:text-blue-800 transition">Sign In</button>
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-sm relative">
+            <button id="closeSignIn" class="absolute top-2 right-3 text-2xl text-gray-400 hover:text-red-500 font-bold">&times;</button>
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">Sign In</h2>
+            <form id="signInForm" class="space-y-4">
+                <input type="email" placeholder="Email" class="w-full border px-4 py-2 rounded" required />
+                <input type="password" placeholder="Password" class="w-full border px-4 py-2 rounded" required />
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-semibold">Sign In</button>
+            </form>
+        </div>
+    </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="text-center py-20 bg-white shadow-inner">
-        <h2 class="text-4xl font-bold mb-4">Track Your Package</h2>
-        <p class="text-lg mb-8">Fast, reliable, and secure logistics tracking</p>
-        <div class="flex justify-center">
-            <input type="text" id="trackingNumber" placeholder="Enter Tracking Number"
-                class="border px-4 py-2 rounded-l-md w-80" />
-            <button id="trackBtn"
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-md font-semibold">Track</button>
+        <div class="flex flex-col items-center">
+            <h2 class="text-4xl font-bold mb-4">Track Your Package</h2>
+            <p class="text-lg mb-8">Fast, reliable, and secure logistics tracking</p>
+            <div class="flex justify-center">
+                <input type="text" id="trackingNumber" placeholder="Enter Tracking Number"
+                    class="border px-4 py-2 rounded-l-md w-80" />
+                <button id="trackBtn"
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-md font-semibold">Track</button>
+            </div>
+            <div id="result" class="mt-6 text-lg font-medium"></div>
+    </section>
+
+    <!-- Compare Courier Prices Section -->
+    <section id="compare" class="py-20 px-6 bg-gray-100 text-center">
+        <!-- No direct images, background handles visual theme -->
+        <h2 class="text-3xl font-bold mb-6">Compare Courier Prices</h2>
+        <form id="compareForm" class="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-xl shadow">
+            <input type="text" id="fromInput" placeholder="From (e.g. Dublin)" class="border px-4 py-2 rounded" required />
+            <input type="text" id="toInput" placeholder="To (e.g. Cork)" class="border px-4 py-2 rounded" required />
+            <input type="number" id="weightInput" placeholder="Weight (kg)" class="border px-4 py-2 rounded" required min="0.1" step="0.1" />
+            <input type="number" id="lengthInput" placeholder="Length (cm)" class="border px-4 py-2 rounded" required min="1" />
+            <input type="number" id="widthInput" placeholder="Width (cm)" class="border px-4 py-2 rounded" required min="1" />
+            <input type="number" id="heightInput" placeholder="Height (cm)" class="border px-4 py-2 rounded" required min="1" />
+            <button type="submit" class="col-span-1 md:col-span-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold mt-2">Compare Prices</button>
+        </form>
+        <div id="comparisonResult" class="mt-8"></div>
+    </section>
+
+    <!-- Featured Couriers Row -->
+    <section class="py-8 px-6 bg-white text-center">
+        <div class="flex flex-wrap justify-center items-center gap-8">
+            <img src="https://parcelhero.com/areas/root/content/images/carriers/dpd.svg" alt="DPD" class="h-12" />
+            <img src="https://parcelhero.com/areas/root/content/images/carriers/ups.svg" alt="UPS" class="h-12" />
+            <img src="https://parcelhero.com/areas/root/content/images/carriers/fedex.svg" alt="FedEx" class="h-12" />
+            <img src="https://parcelhero.com/areas/root/content/images/carriers/dhl.svg" alt="DHL" class="h-12" />
         </div>
-        <div id="result" class="mt-6 text-lg font-medium"></div>
+    </section>
+
+    <!-- Quick Info Cards -->
+    <section class="py-8 px-6 bg-gray-50 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="font-bold text-xl mb-2">Irish Delivery</h3>
+                <p>Low cost, same-day collection, next-day delivery across Ireland.</p>
+                <span class="block mt-2 text-green-600 font-bold">From €2.69</span>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="font-bold text-xl mb-2">International Delivery</h3>
+                <p>Express or economy worldwide delivery with top couriers.</p>
+                <span class="block mt-2 text-blue-600 font-bold">From €20.60</span>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="font-bold text-xl mb-2">Large Parcel Delivery</h3>
+                <p>Specialist couriers for heavy or large items, including pallets.</p>
+                <span class="block mt-2 text-yellow-600 font-bold">From €7.91</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose ProLogix Section -->
+    <section class="py-16 px-6 bg-white text-center">
+        <h2 class="text-3xl font-bold mb-6">Why Choose ProLogix?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div class="bg-gray-100 rounded-xl shadow p-6">
+                <h3 class="font-bold text-lg mb-2">Save up to 60%</h3>
+                <p>Compare prices and get the best deal for your parcel delivery.</p>
+            </div>
+            <div class="bg-gray-100 rounded-xl shadow p-6">
+                <h3 class="font-bold text-lg mb-2">Secure Delivery</h3>
+                <p>Free cover up to €50 on every shipment for peace of mind.</p>
+            </div>
+            <div class="bg-gray-100 rounded-xl shadow p-6">
+                <h3 class="font-bold text-lg mb-2">Door Collection & Drop-off</h3>
+                <p>Choose collection from your door or drop-off at local shops.</p>
+            </div>
+            <div class="bg-gray-100 rounded-xl shadow p-6">
+                <h3 class="font-bold text-lg mb-2">Trusted Couriers</h3>
+                <p>Work with leading couriers: DPD, UPS, FedEx, DHL and more.</p>
+            </div>
+        </div>
+    </section>
+            <div id="result" class="mt-6 text-lg font-medium"></div>
+        </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="py-20 px-6 bg-gray-100 text-center">
-        <h2 class="text-3xl font-bold mb-4">About ProLogix</h2>
-        <p class="max-w-3xl mx-auto">ProLogix is your trusted partner for logistics solutions. We provide real-time
-            tracking, efficient delivery, and seamless support to ensure your packages reach safely and on time.</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+            <div>
+                <h2 class="text-3xl font-bold mb-4">About ProLogix</h2>
+                <p class="max-w-3xl mx-auto">ProLogix is your trusted partner for logistics solutions. We provide real-time
+                    tracking, efficient delivery, and seamless support to ensure your packages reach safely and on time.</p>
+            </div>
+        </div>
     </section>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 px-6 bg-white text-center">
-        <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
-        <p class="mb-6">Have questions or need help? Reach out to our support team.</p>
-        <form
-            class="max-w-xl mx-auto space-y-4"
-            onsubmit="event.preventDefault(); alert('Thank you for contacting us! We will get back to you soon.'); this.reset();"
-        >
-            <input type="text" placeholder="Your Name" class="w-full border px-4 py-2 rounded" required />
-            <input type="email" placeholder="Your Email" class="w-full border px-4 py-2 rounded" required />
-            <textarea placeholder="Your Message" rows="4" class="w-full border px-4 py-2 rounded" required></textarea>
-            <button
-                type="submit"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold"
-            >
-                Send Message
-            </button>
-        </form>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+            <div class="w-full">
+                <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
+                <p class="mb-6">Have questions or need help? Reach out to our support team.</p>
+                <form
+                    class="max-w-xl mx-auto space-y-4"
+                    onsubmit="event.preventDefault(); alert('Thank you for contacting us! We will get back to you soon.'); this.reset();"
+                >
+                    <input type="text" placeholder="Your Name" class="w-full border px-4 py-2 rounded" required />
+                    <input type="email" placeholder="Your Email" class="w-full border px-4 py-2 rounded" required />
+                    <textarea placeholder="Your Message" rows="4" class="w-full border px-4 py-2 rounded" required></textarea>
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold"
+                    >
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
     </section>
 
+    <!-- Sustainability & Technology Section -->
+    <section class="py-20 px-6 bg-gradient-to-r from-green-100 to-blue-100 text-center">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+            <div>
+                <h2 class="text-3xl font-bold mb-4 text-green-700">Sustainability & Technology</h2>
+                <p class="max-w-2xl mx-auto text-lg mb-4">We are committed to a greener future and innovative delivery solutions. Our fleet is moving towards net zero emissions, and our technology ensures your package is delivered on time, every time.</p>
+                <ul class="list-disc list-inside text-left mx-auto max-w-md text-gray-700">
+                    <li>Fleet decarbonisation and solar-powered buildings</li>
+                    <li>Real-time air quality monitoring</li>
+                    <li>One-hour delivery window notifications</li>
+                    <li>Image proof-of-delivery and easy returns</li>
+                </ul>
+            </div>
+        </div>
+    </section>
     <!-- New Chat Widget -->
     <div id="chatWidget" class="fixed bottom-4 right-4 z-50 w-80 font-sans">
         <button
@@ -127,22 +251,100 @@
         const trackingButton = document.getElementById("trackBtn");
         const resultDiv = document.getElementById("result");
 
+        // Show default message on page load
+        resultDiv.innerHTML = '<span class="text-gray-500">Enter your tracking number above and click Track to see your package journey.</span>';
+
+        // Loading animation HTML
+        function showLoading() {
+            resultDiv.innerHTML = `<div class='flex items-center justify-center gap-2'><svg class='animate-spin h-6 w-6 text-green-500' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'><circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle><path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'></path></svg><span class='text-green-600'>Loading tracking details...</span></div>`;
+        }
+
         trackingButton.addEventListener("click", () => {
             const trackingNumber = document.getElementById("trackingNumber").value.trim();
             if (!trackingNumber) {
-                resultDiv.innerText = "Please enter a tracking number.";
+                resultDiv.innerHTML = '<span class="text-red-600">Please enter a tracking number.</span>';
                 return;
             }
-            // Simulate real tracking info
-            const statuses = [
-                "Package is in transit and expected to arrive tomorrow.",
-                "Package has been dispatched from the warehouse.",
-                "Package is out for delivery.",
-                "Package delivered successfully. Thank you for choosing ProLogix!",
-                "Package delayed due to weather conditions. We apologize for the inconvenience.",
+            showLoading();
+            setTimeout(() => {
+                // Simulate a detailed tracking journey
+                const today = new Date();
+                const deliveryDays = Math.floor(Math.random() * 3) + 1; // 1-3 days
+                const deliveryDate = new Date(today.getTime() + deliveryDays * 24 * 60 * 60 * 1000);
+                const formattedDate = deliveryDate.toLocaleDateString();
+                const steps = [
+                    { status: "Order Placed", time: "Just now" },
+                    { status: "Package Prepared", time: "1 hour ago" },
+                    { status: "Dispatched from Warehouse", time: "Today, 9:00 AM" },
+                    { status: "In Transit", time: "Today, 12:00 PM" },
+                    { status: "Out for Delivery", time: "Tomorrow, 8:00 AM" },
+                    { status: "Estimated Delivery", time: formattedDate }
+                ];
+                let progressHTML = `<div class='bg-white rounded-xl shadow p-6 max-w-xl mx-auto'><h3 class='text-2xl font-bold mb-4 text-blue-600'>Tracking for <span class='text-green-600'>${trackingNumber}</span></h3><ol class='relative border-l border-blue-300 ml-4'>`;
+                steps.forEach((step, idx) => {
+                    progressHTML += `<li class='mb-6 ml-6'>
+                        <div class='absolute w-3 h-3 bg-blue-500 rounded-full -left-1.5 border border-white'></div>
+                        <span class='font-semibold text-gray-800'>${step.status}</span>
+                        <div class='text-sm text-gray-500'>${step.time}</div>
+                    </li>`;
+                });
+                progressHTML += `</ol><div class='mt-4 text-lg font-semibold text-green-700'>Estimated Delivery: ${formattedDate}</div></div>`;
+                resultDiv.innerHTML = progressHTML;
+            }, 1200);
+        });
+
+        // Compare Courier Prices Logic
+        const compareForm = document.getElementById("compareForm");
+        const comparisonResult = document.getElementById("comparisonResult");
+
+        compareForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            // Get form values
+            const from = document.getElementById("fromInput").value.trim();
+            const to = document.getElementById("toInput").value.trim();
+            const weight = parseFloat(document.getElementById("weightInput").value);
+            const length = parseFloat(document.getElementById("lengthInput").value);
+            const width = parseFloat(document.getElementById("widthInput").value);
+            const height = parseFloat(document.getElementById("heightInput").value);
+
+            // Simple price calculation (for demo)
+            function calcPrice(base, w, l, wi, h) {
+                return (base + w * 0.5 + (l + wi + h) * 0.02).toFixed(2);
+            }
+            const prices = [
+                { name: "DPD", url: "https://www.dpd.ie/", base: 2.69 },
+                { name: "UPS", url: "https://www.ups.com/ie/en/Home.page", base: 3.10 },
+                { name: "FedEx", url: "https://www.fedex.com/en-ie/home.html", base: 3.50 },
+                { name: "DHL", url: "https://www.dhl.com/ie-en/home.html", base: 3.20 }
             ];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-            resultDiv.innerText = `Tracking info for ${trackingNumber}: ${randomStatus}`;
+
+            let tableHTML = `<div class='bg-white rounded-xl shadow p-6 max-w-3xl mx-auto'><h3 class='text-2xl font-bold mb-4 text-blue-600'>Price Comparison</h3><table class='w-full text-left border-collapse'><thead><tr class='bg-blue-100'><th class='py-2 px-4'>Courier</th><th class='py-2 px-4'>Estimated Price (€)</th><th class='py-2 px-4'>Website</th></tr></thead><tbody>`;
+            prices.forEach(p => {
+                const price = calcPrice(p.base, weight, length, width, height);
+                tableHTML += `<tr><td class='py-2 px-4 font-semibold'>${p.name}</td><td class='py-2 px-4'>${price}</td><td class='py-2 px-4'><a href='${p.url}' target='_blank' class='text-blue-500 underline'>Visit</a></td></tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            tableHTML += `<div class='mt-6 text-left'><h4 class='font-bold mb-2 text-green-700'>Compare with other price comparison sites:</h4><ul class='list-disc list-inside text-blue-600'><li><a href='https://www.parcelhero.com/' target='_blank' class='underline'>ParcelHero</a></li><li><a href='https://www.parcel2go.com/' target='_blank' class='underline'>Parcel2Go</a></li><li><a href='https://www.shiply.com/' target='_blank' class='underline'>Shiply</a></li></ul></div></div>`;
+            comparisonResult.innerHTML = tableHTML;
+        });
+
+        // Sign In Modal Logic
+        const signInBtn = document.getElementById("signInBtn");
+        const signInModal = document.getElementById("signInModal");
+        const closeSignIn = document.getElementById("closeSignIn");
+        const signInForm = document.getElementById("signInForm");
+
+        signInBtn.addEventListener("click", () => {
+            signInModal.classList.remove("hidden");
+        });
+        closeSignIn.addEventListener("click", () => {
+            signInModal.classList.add("hidden");
+        });
+        signInForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Signed in successfully!");
+            signInModal.classList.add("hidden");
+            signInForm.reset();
         });
 
         // Chat Widget Logic
@@ -299,6 +501,7 @@
             });
         });
     </script>
+</div>
 </body>
 
 </html>
